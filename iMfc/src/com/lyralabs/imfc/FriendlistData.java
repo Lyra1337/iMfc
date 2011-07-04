@@ -6,6 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 public class FriendlistData {
@@ -19,6 +24,9 @@ public class FriendlistData {
 			
 			JSONArray on  = null;
 			JSONArray off = null;
+
+			this.online = new ArrayList<String>();
+			this.offline = new ArrayList<String>();
 			
 			try {
 				on  = obj.getJSONArray("online");
@@ -33,13 +41,11 @@ public class FriendlistData {
 				}
 			}
 			if(on != null) {
-				this.online = new ArrayList<String>();
 				for(int i = 0; i < on.length(); i++) {
 					this.online.add(on.getString(i));
 				}
 			}
 			if(off != null) {
-				this.offline = new ArrayList<String>();
 				for(int i = 0; i < off.length(); i++) {
 					this.offline.add(off.getString(i));
 				}
@@ -60,11 +66,19 @@ public class FriendlistData {
 	public CharSequence[] getAll() {
 		CharSequence[] all = new CharSequence[this.offline.size() + this.online.size()];
 		int i = 0;
+		
+		ForegroundColorSpan onlineColor  = new ForegroundColorSpan(0xFF00DD00);
+		ForegroundColorSpan offlineColor = new ForegroundColorSpan(0xFFDD0000);
+		
 		while (i < all.length) {
-			if(i >= online.size()) {
-				all[i] = offline.get(i - online.size());
+			if(i >= this.online.size()) {
+				SpannableString ss = new SpannableString(this.offline.get(i - this.online.size()));
+				ss.setSpan(offlineColor, 0, ss.length(), 0);
+				all[i] = ss;
 			} else {
-				all[i] = online.get(i);
+				SpannableString ss = new SpannableString(this.online.get(i));
+				ss.setSpan(onlineColor, 0, ss.length(), 0);
+				all[i] = ss;
 			}
 			i++;
 		}

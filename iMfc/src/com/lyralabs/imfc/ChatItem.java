@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class ChatItem {
 	private String sender;
 	private String receiver;
+	private String channel;
+	private MessageType type;
 	private ArrayList<ChatLogItem> chatlog;
 	public void setChatlog(ArrayList<ChatLogItem> chatlog) {
 		this.chatlog = chatlog;
@@ -21,14 +23,26 @@ public class ChatItem {
 		}
 		return unread;
 	}
-	public void setSender(String sender) {
-		this.sender = sender;
+	public void setSender(String _sender) {
+		this.sender = _sender;
 	}
 	public String getSender() {
-		return sender;
+		return this.sender;
 	}
-	public void setReceiver(String receiver) {
-		this.receiver = receiver;
+	public void setChannel(String _channel) {
+		this.channel = _channel;
+	}
+	public String getChannel() {
+		return this.channel;
+	}
+	public void setType(MessageType _type) {
+		this.type = _type;
+	}
+	public MessageType getType() {
+		return this.type;
+	}
+	public void setReceiver(String _receiver) {
+		this.receiver = _receiver;
 	}
 	public String getReceiver() {
 		return receiver;

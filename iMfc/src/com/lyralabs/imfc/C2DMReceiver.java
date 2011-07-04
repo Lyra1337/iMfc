@@ -41,7 +41,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
             String authId = (String) extras.get("auth");
             String collapseKey = (String) extras.get("collapse_key");
             
-            Log.i("c2dm", "sender: " + sender + " | " + 
+            Log.e("lyra-c2dm", "sender: " + sender + " | " + 
             	  "receiver: " + receiver + " | " + 
             	  "authId: " + authId + " | " + 
             	  "collapseKey: " + collapseKey);
@@ -49,13 +49,15 @@ public class C2DMReceiver extends C2DMBaseReceiver {
             Toast.makeText(context, "sender: " + sender + " | " + 
             	  "receiver: " + receiver + " | " + 
             	  "authId: " + authId + " | " + 
-            	  "collapseKey: " + collapseKey, Toast.LENGTH_LONG).show();
+            	  "collapseKey: " + collapseKey, Toast.LENGTH_SHORT).show();
             
             //Intent i = new Intent(context, Login.class);
-            Util.nofify(context, new ChatLogItem(sender, receiver, "", "", false));
+            //Util.nofify(context, new ChatLogItem(sender, receiver, "", "", false));
             //context.startActivity(i);
         } else {
         	Log.w("lyra-c2dm", "push-data is empty");
+            
+            Toast.makeText(context, "push-data is empty", Toast.LENGTH_SHORT).show();
         }
     }
 }

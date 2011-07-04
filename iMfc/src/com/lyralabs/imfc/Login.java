@@ -1,23 +1,15 @@
 package com.lyralabs.imfc;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
 import com.google.android.c2dm.C2DMessaging;
 
 import android.app.Activity;
@@ -157,7 +149,7 @@ public class Login extends Activity {
 					URL updateURL = new URL(url);
 			        URLConnection conn = updateURL.openConnection();
 			        InputStream is = conn.getInputStream();
-			        BufferedInputStream bis = new BufferedInputStream(is);
+			        BufferedInputStream bis = new BufferedInputStream(is, 1024 * 8);
 			        ByteArrayBuffer baf = new ByteArrayBuffer(50);
 			        
 			        int current = 0;
@@ -240,7 +232,7 @@ public class Login extends Activity {
 		}
 		return hashtext;
 	}
-	
+	/*
 	private boolean LikeMobileMfc = false;
 	private Facebook fb = new Facebook("184724601575513");
 	
@@ -311,4 +303,5 @@ public class Login extends Activity {
 
         fb.authorizeCallback(requestCode, resultCode, data);
     }
+    */
 }

@@ -110,18 +110,24 @@ public class Util {
 						try {
 							JSONObject entry = array.getJSONObject(i);
 							ChatItem chat = GetChat(entry.getString("sender"),
-									entry.getString("receiver"));
+													entry.getString("receiver"),
+													entry.getString("channel"),
+													ChatLogItem.GetMessageType(entry.getString("type")));
 							
 							if(chat == null) {
 								Toast.makeText(_context, "Nick nicht eingeloggt oder existiert nicht.", Toast.LENGTH_LONG).show();
 								continue;
 							}
 							
-							ChatLogItem cli = new ChatLogItem(entry
-									.getString("sender"), entry
-									.getString("receiver"), entry
-									.getString("message"), entry
-									.getString("timestamp"), false);
+							ChatLogItem cli = new ChatLogItem(
+									entry.getString("sender"),
+									entry.getString("receiver"),
+									entry.getString("channel"),
+									entry.getString("message"),
+									entry.getString("timestamp"),
+									false,
+									ChatLogItem.GetMessageType(entry.getString("type"))
+							);
 
 							chat.getChatlog().add(cli);
 							Util.Updated = true;
@@ -139,8 +145,10 @@ public class Util {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			if (updateFailCount++ > 4) {
+				updateFailCount = 0;
 				Log.w("lyra-mfc-updater", "Failed 5 times");
-				return lastTimestamp;
+				Toast.makeText(_context, "Connection problems?", Toast.LENGTH_LONG);
+				//return lastTimestamp;
 			}
 			Log.i("lyra-mfc-updater", "retrying update");
 			return UpdateChatItems(_context, _timestamp, _authId);
@@ -186,8 +194,7 @@ public class Util {
 		if (cli.getSender().equalsIgnoreCase("Charles")
 				|| cli.getReceiver().equalsIgnoreCase("Charles")
 				|| cli.getSender().equalsIgnoreCase(Util.user)
-				|| cli.getReceiver().startsWith("#")
-				|| cli.getSender().startsWith("#")) {
+				|| cli.getType() == MessageType.Public) {
 			Log.w("notify", "ignoring nitification");
 			return;
 		}
@@ -227,40 +234,62 @@ public class Util {
 		return lastTimestamp;
 	}
 
-	public static ChatItem GetChat(String sender, String receiver) {
-		if(sender == null || receiver == null || sender.length() < 1 || receiver.length() < 1 || sender.equalsIgnoreCase(receiver)) {
+	public static ChatItem GetChat(String sender, String receiver, String channel, MessageType type) {
+		if(sender == null || sender.length() < 1) {
 			return null;
 		}
 		
-		if(sender.startsWith("#")) {
+		if(type == MessageType.Public && (channel == null || channel.length() < 1)) {
+			return null;
+		}
+		
+		if((type == MessageType.Private || type == MessageType.PrivateMessage) && (receiver == null || receiver.length() < 1)) {
+			return null;
+		}
+		
+		
+		
+		if(type == MessageType.Public) {
 			for (int i = 0; i < Util.ChatItems.size(); i++) {
-				if (Util.ChatItems.get(i).getSender().equalsIgnoreCase(sender)   || Util.ChatItems.get(i).getReceiver().equalsIgnoreCase(sender)) {
+				ChatItem current = Util.ChatItems.get(i);
+				if (current.getType() == MessageType.Public && current.getChannel().equalsIgnoreCase(channel)) {
 					return Util.ChatItems.get(i);
 				}
 			}
 		}
 		
-		if(receiver.startsWith("#")) {
+		if(type == MessageType.Private) {
 			for (int i = 0; i < Util.ChatItems.size(); i++) {
-				if (Util.ChatItems.get(i).getSender().equalsIgnoreCase(receiver) || Util.ChatItems.get(i).getReceiver().equalsIgnoreCase(receiver)) {
+				ChatItem current = Util.ChatItems.get(i);
+				String otherChatter = getOtherNick(current.getReceiver(), current.getSender());
+				Log.e("otherChatter", "otherChatter: " + otherChatter + " | receiver: " + receiver + " | sender: " + sender);
+				if(otherChatter == null) {
+					continue;
+				}
+				if (current.getType() == MessageType.Private && otherChatter.equals("") == false && (otherChatter.equalsIgnoreCase(receiver) || otherChatter.equalsIgnoreCase(sender))) {
 					return Util.ChatItems.get(i);
 				}
 			}
 		}
 		
-		Log.i("GetChat", "Sender [" + sender + "]  Receiver [" + receiver + "]");
-		for (int i = 0; i < Util.ChatItems.size(); i++) {
+		Log.e("GetChat", "Creating new Chat...");
+		
+		Log.i("GetChat", "Sender [" + sender + "]  Receiver [" + receiver + "]  Channel [" + channel + "]  Type [" + type.name() + "]");
+		
+		/*for (int i = 0; i < Util.ChatItems.size(); i++) {
 			if ((Util.ChatItems.get(i).getSender().equalsIgnoreCase(sender)   && Util.ChatItems.get(i).getReceiver().equalsIgnoreCase(receiver))
 		     || (Util.ChatItems.get(i).getSender().equalsIgnoreCase(receiver) && Util.ChatItems.get(i).getReceiver().equalsIgnoreCase(sender))) {
 				return Util.ChatItems.get(i);
 			}
-		}
+		}*/
 
 		ChatItem i = new ChatItem();
 		i.setChatlog(new ArrayList<ChatLogItem>());
 
 		i.setSender(sender);
 		i.setReceiver(receiver);
+		i.setChannel(channel);
+		i.setType(type);
 
 		Util.ChatItems.add(i);
 
@@ -286,22 +315,32 @@ public class Util {
 	public static String getHost() {
 		return host;
 	}
+	
+	public static String getOtherNick(String nick1, String nick2) {
+		if(nick1.equalsIgnoreCase(Util.user)) {
+			return nick2;
+		} else if(nick2.equalsIgnoreCase(Util.user)) {
+			return nick1;
+		} else {
+			return null;
+		}
+	}
 
-	public static void sendPrivateMessage(final String nick, final String text) {
+	public static void sendMessage(final String receiver, final String text, final String channel, final MessageType type) {
 		(new Thread(new Runnable() {
 			public void run() {
+				String _channel = channel;
+				String _receiver= receiver;
+				if(channel == null)
+					_channel = "";
+				if(receiver== null)
+					_receiver = "";
 				HttpClient httpClient = new DefaultHttpClient();
 				String urlString = host + "/ajax/?action=sendpp&instance="
-						+ authId + "&receiver=" + URLEncoder.encode(nick)
-						+ "&message=" + URLEncoder.encode(text);
-				;
-				try {
-					urlString = host + "/ajax/?action=sendpp&instance="
-							+ authId + "&receiver=" + URLEncoder.encode(nick)
-							+ "&message=" + URLEncoder.encode(text);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+						+ authId + "&receiver=" + URLEncoder.encode(_receiver)
+						+ "&message=" + URLEncoder.encode(text)
+						+ "&type=" + type.name().toLowerCase()
+						+ "&channel=" + URLEncoder.encode(_channel);
 				Log.e("Util", urlString);
 				HttpGet get = new HttpGet(urlString);
 				try {
