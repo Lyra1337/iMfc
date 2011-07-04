@@ -166,7 +166,7 @@ public class Chats extends ListActivity {
 			LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 			View layout = inflater.inflate(R.layout.newchat, (ViewGroup) findViewById(R.id.layout_root));
 
-			final EditText text = (EditText) layout.findViewById(R.id.text);
+			final EditText newReceiver = (EditText) layout.findViewById(R.id.text);
 
 			builder = new AlertDialog.Builder(this);
 			builder.setView(layout);
@@ -174,7 +174,7 @@ public class Chats extends ListActivity {
 			alertDialog.setTitle("Nickname eingeben");
 			alertDialog.setButton("Neuer Chat", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					ChatItem item = Util.GetChat(text.getText().toString(), Util.user);
+					ChatItem item = Util.GetChat(newReceiver.getText().toString(), Util.user, null, MessageType.Private);
 					if(item == null) {
 						Toast.makeText(Chats.this, "Nick nicht eingeloggt oder existiert nicht.", Toast.LENGTH_SHORT).show();
 					}
@@ -205,20 +205,36 @@ public class Chats extends ListActivity {
 			calertDialog.show();
 			return true;
 		case R.id.menu_friendList:
-			String friendListJson = Util.action("friendlist", false);
+			final ProgressDialog friendListWaiter = ProgressDialog.show(Chats.this, "", "Friendlist abrufen...", true);
 			
-			FriendlistData friendList = new FriendlistData(friendListJson);
-			final CharSequence[] items = friendList.getAll();
+			(new Thread(new Runnable() {
+				public void run() {
+					String friendListJson = Util.action("friendlist", false);
+					Chats.this.runOnUiThread(new Runnable() {
+						public void run() {
+							friendListWaiter.hide();
+						}
+					});
+					final FriendlistData friendList = new FriendlistData(friendListJson);
+					final CharSequence[] items = friendList.getAll();
+					
+					Chats.this.runOnUiThread(new Runnable() {
+						public void run() {
+							AlertDialog.Builder friendListDialog = new AlertDialog.Builder(Chats.this);
+							friendListDialog.setTitle("Friendlist");
+							friendListDialog.setItems(items, new DialogInterface.OnClickListener() {
+							    public void onClick(DialogInterface dialog, int item) {
+							        
+							    }
+							});
+							AlertDialog alert = friendListDialog.create();
+							alert.show();
+						}
+					});
+				}
+			})).start();
 			
-			AlertDialog.Builder friendListDialog = new AlertDialog.Builder(this);
-			friendListDialog.setTitle("Friendlist");
-			friendListDialog.setItems(items, new DialogInterface.OnClickListener() {
-			    public void onClick(DialogInterface dialog, int item) {
-			        Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
-			    }
-			});
-			AlertDialog alert = friendListDialog.create();
-			alert.show();
+			friendListWaiter.show();
 			return true;
 		case R.id.menu_logout:
 			try {

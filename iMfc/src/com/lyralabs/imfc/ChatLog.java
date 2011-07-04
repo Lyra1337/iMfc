@@ -1,5 +1,7 @@
 package com.lyralabs.imfc;
 
+import java.net.URLEncoder;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +18,10 @@ import android.widget.Toast;
 public class ChatLog extends Activity {
 	private ListView listView = null;
 	private ChatLogItemAdapter adapter;
-	private String nick = null;
-	private String source = null;
+	private String sender = null;
+	private String channel = null;
+	private String receiver = null;
+	private MessageType type = null;
 	private Integer lastCount = 0;
 	private EditText sendText = null;
 	
@@ -47,17 +51,21 @@ public class ChatLog extends Activity {
 		Util.disablePush();
         
         Bundle extras = this.getIntent().getExtras();
-        this.nick = extras.getString("MFC.DEST");
-        this.source = extras.getString("MFC.SRC");
+        this.sender = extras.getString("MFC.SENDER");
+        this.channel = extras.getString("MFC.CHANNEL");
+        this.receiver = extras.getString("MFC.RECEIVER");
+        this.type = MessageType.values()[extras.getInt("MFC.TYPE")];
         
-        if(this.source.startsWith("#")) {
-        	this.setTitle("Channel " + this.source);
-        } else {
-        	this.setTitle("Privates Gespräch mit " + this.nick);
+        if(this.type == MessageType.Public) {
+        	this.setTitle("Channel " + this.channel);
+        } else if(this.type == MessageType.Private) {
+        	this.setTitle("Privates Gespräch mit " + Util.getOtherNick(this.receiver, this.sender));
+        } else if(this.type == MessageType.PrivateMessage) {
+        	this.setTitle("/m-Gespräch mit " + Util.getOtherNick(this.receiver, this.sender));
         }
         
         this.listView = (ListView)this.findViewById(R.id.history);
-		ChatItem item = Util.GetChat(this.nick, this.source);
+		ChatItem item = Util.GetChat(this.sender, this.receiver, this.channel, this.type);
         if(item == null) {
 			Toast.makeText(ChatLog.this, "Nick nicht eingeloggt oder existiert nicht.", Toast.LENGTH_SHORT).show();
 			this.onKeyUp(0, null);
@@ -73,11 +81,9 @@ public class ChatLog extends Activity {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if(keyCode == KeyEvent.KEYCODE_ENTER && ChatLog.this.sendText.getText().length() > 0) {
 					String text = ChatLog.this.sendText.getText().toString();
-					if(ChatLog.this.source.startsWith("#")) {
-						Util.sendPrivateMessage(ChatLog.this.source, text);
-					} else {
-						Util.sendPrivateMessage(ChatLog.this.nick, text);
-					}
+					
+					Util.sendMessage(Util.getOtherNick(ChatLog.this.receiver, ChatLog.this.sender), text, ChatLog.this.channel, ChatLog.this.type);
+					
 					ChatLog.this.sendText.setText("");
 					return true;
 				}
@@ -116,7 +122,7 @@ public class ChatLog extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		ChatItem current = Util.GetChat(this.nick, this.source);
+		ChatItem current = Util.GetChat(Util.user, Util.getOtherNick(this.receiver, this.sender), this.channel, this.type);
 		if(current == null) {
 			Toast.makeText(ChatLog.this, "Nick nicht eingeloggt oder existiert nicht.", Toast.LENGTH_SHORT).show();
 			return false;

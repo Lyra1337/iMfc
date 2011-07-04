@@ -25,22 +25,22 @@ public class ChatItemAdapter extends ArrayAdapter<ChatItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.i("ChatItemAdapter", "updating View..");
+		//Log.i("ChatItemAdapter", "updating View..");
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.chatitem, null);
-			Log.i("ChatItemAdapter", "convertView is null");
+			//Log.i("ChatItemAdapter", "convertView is null");
 		}
 		final ChatItem current = this._items.get(position);
 		if (current != null) {
 			TextView chatterName = (TextView) v.findViewById(R.id.chatterName);
 			TextView counter = (TextView) v.findViewById(R.id.unreadItemsCount);
 			if (chatterName != null) {
-				if(current.getReceiver().startsWith("#")) {
-					chatterName.setText(current.getReceiver());
-				} else {
-					chatterName.setText(current.getSender());
+				if(current.getType() == MessageType.Public) {
+					chatterName.setText("#" + current.getChannel());
+				} else if(current.getType() == MessageType.Private) {
+					chatterName.setText(Util.getOtherNick(current.getSender(), current.getReceiver()));
 				}
 			}
 			if (counter != null) {
@@ -53,8 +53,10 @@ public class ChatItemAdapter extends ArrayAdapter<ChatItem> {
 		v.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(ChatItemAdapter.this._context, ChatLog.class);
-				i.putExtra("MFC.DEST", current.getSender());
-				i.putExtra("MFC.SRC", current.getReceiver());
+				i.putExtra("MFC.SENDER", current.getSender());
+				i.putExtra("MFC.CHANNEL", current.getChannel());
+				i.putExtra("MFC.RECEIVER", current.getReceiver());
+				i.putExtra("MFC.TYPE", current.getType().ordinal());
 				ChatItemAdapter.this._context.startActivity(i);
 				ChatItemAdapter.this._context.finish();
 			}
