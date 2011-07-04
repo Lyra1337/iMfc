@@ -141,7 +141,7 @@ public class Login extends Activity {
 								 "&pass=" + base64(pass) +
 								 "&chan=" + base64(chan) +
 								 "&client=" + base64("Lyra` iMFC for Android") +
-								 "&apikey=" + "0CCAFA73-180C-4E92-846B-F7FE0117E6DF" +
+								 "&apikey=" + "0CCAFA73-180C-4E92-1337-F7FE0117E6DF" +
 								 "&chatsystem=" + chatSystem;
 					
 					Log.e("Loginurl", url);
