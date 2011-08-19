@@ -19,14 +19,14 @@ public class ChatLogItemAdapter extends ArrayAdapter<ChatLogItem> {
 		super(context, textViewResourceId, items);
 		this._items = items;
 		this._context = context;
-		vi = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.vi = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
 		if (v == null) {
-			v = vi.inflate(R.layout.chatlogitem, null);
+			v = this.vi.inflate(R.layout.chatlogitem, null);
 		}
 		ChatLogItem current = this._items.get(position);
 		if (current != null) {

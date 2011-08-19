@@ -22,6 +22,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -66,6 +69,19 @@ public class Login extends Activity {
 		txtUser.setText(Util.readUsername(this).trim());
 		txtPass.setText(Util.readPassword(this).trim());
 		txtChatsystem.setSelection(pos, true);
+		txtChatsystem.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if(position == 0) {
+					txtChan.setText("oGAME");
+				} else {
+					txtChan.setText("Biergarten");
+				}
+			}
+
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
 		txtChan.setText(readChan);
         final Button btn = (Button) this.findViewById(R.id.btnLogin);
         
@@ -142,7 +158,8 @@ public class Login extends Activity {
 								 "&chan=" + base64(chan) +
 								 "&client=" + base64("Lyra` iMFC for Android") +
 								 "&apikey=" + "0CCAFA73-180C-4E92-1337-F7FE0117E6DF" +
-								 "&chatsystem=" + chatSystem;
+								 "&chatsystem=" + chatSystem + 
+								 "&hwid=" + Util.GetDeviceID(Login.this);
 					
 					Log.e("Loginurl", url);
 					

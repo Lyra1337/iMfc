@@ -1,7 +1,5 @@
 package com.lyralabs.imfc;
 
-import java.net.URLEncoder;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
