@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,6 +37,8 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -75,6 +78,40 @@ public class Util {
 		if(mBoundService != null) {
 			mBoundService.stopSelf();
 		}
+	}
+	
+	public static String GetDeviceID(Context context) {
+	    final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+	    final WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+	    
+	    String deviceMac, tmDevice, tmSerial, androidId;
+	    try {
+	    	deviceMac = "" + wm.getConnectionInfo().getMacAddress();
+	    } catch(Throwable t) {
+	    	deviceMac = "";
+	    }
+	    try {
+	    	tmDevice = "" + tm.getDeviceId();
+	    } catch(Throwable t) {
+	    	tmDevice = "";
+	    }
+	    try {
+	    	tmSerial = "" + tm.getSimSerialNumber();
+	    } catch(Throwable t) {
+	    	tmSerial = "";
+	    }
+	    try {
+	    	androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+	    } catch(Throwable t) {
+	    	androidId = "";
+	    }
+
+	    UUID deviceUuid = new UUID((androidId.hashCode() | deviceMac.hashCode()), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+	    String deviceId = deviceUuid.toString();
+	    
+	    Log.e("DeviceID", deviceId);
+	    
+	    return deviceId;
 	}
 
 	public static void killMe() {

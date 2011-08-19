@@ -1,7 +1,5 @@
 package com.lyralabs.imfc;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
