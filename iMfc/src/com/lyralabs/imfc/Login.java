@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -56,7 +55,7 @@ public class Login extends Activity {
 		final TextView txtChan = (TextView)this.findViewById(R.id.txtChannel);
 		final Spinner txtChatsystem = (Spinner)this.findViewById(R.id.txtChatsytem);
 		
-		int pos = 1;
+		int pos = 0;
 		try {
 			pos = Integer.parseInt(Util.readChatsystem(this).trim());
 		} catch(Throwable ex) {
@@ -89,7 +88,7 @@ public class Login extends Activity {
         btn.setHapticFeedbackEnabled(true);
         btn.setOnLongClickListener(new OnLongClickListener() {	
 			public boolean onLongClick(View v) {
-				Util.host = "http://lyralabs.is-a-geek.net:1338";
+				Util.host = "http://lyralabs.is-a-geek.net:1337";
 				return false;
 			}
 		});
