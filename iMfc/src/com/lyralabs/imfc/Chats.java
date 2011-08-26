@@ -46,6 +46,8 @@ public class Chats extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.chats);
+
+		this.setTitle("Lyra` MobileKnuddels [/w br1ght]");
 		
 		if(adapter != null)
 			adapter.notifyDataSetChanged();
@@ -149,20 +151,20 @@ public class Chats extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_togglebot:
+		/*case R.id.menu_togglebot:
 			if(Util.toggleStayonline()) {
 				Toast.makeText(this, "Stayonline aktiviert", Toast.LENGTH_LONG).show();
 			} else {
 				Toast.makeText(this, "Stayonline deaktiviert", Toast.LENGTH_LONG).show();
 			}
-			return true;
+			return true;/**/
 			
 		case R.id.menu_newchat:
 			AlertDialog.Builder builder;
 			AlertDialog alertDialog;
 
-			LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-			View layout = inflater.inflate(R.layout.newchat, (ViewGroup) findViewById(R.id.layout_root));
+			LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+			View layout = layoutInflater.inflate(R.layout.newchat, (ViewGroup) findViewById(R.id.layout_root));
 
 			final EditText newReceiver = (EditText) layout.findViewById(R.id.text);
 
