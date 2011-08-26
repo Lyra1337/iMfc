@@ -15,15 +15,19 @@ public class FriendlistData {
 	private ArrayList<String> offline = null;
 	
 	public FriendlistData(String json) {
-		Log.w("FriendlistJson", json);
+		this.online = new ArrayList<String>();
+		this.offline = new ArrayList<String>();
+		
+		if(json != null) {
+			Log.w("FriendlistJson", json);
+		} else {
+			Log.w("FriendlistJson", "json is null!");
+		}
 		try {
 			JSONObject obj = new JSONObject(json);
 			
 			JSONArray on  = null;
 			JSONArray off = null;
-
-			this.online = new ArrayList<String>();
-			this.offline = new ArrayList<String>();
 			
 			try {
 				on  = obj.getJSONArray("online");
@@ -61,6 +65,10 @@ public class FriendlistData {
 	}
 	
 	public CharSequence[] getAll() {
+		if(this.offline == null)
+			this.offline = new ArrayList<String>();
+		if(this.online == null)
+			this.online = new ArrayList<String>();
 		CharSequence[] all = new CharSequence[this.offline.size() + this.online.size()];
 		int i = 0;
 		

@@ -10,6 +10,9 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 import com.google.android.c2dm.C2DMessaging;
 
 import android.app.Activity;
@@ -26,16 +29,24 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends Activity {
+	private AdView adView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.login);
 		
+		this.adView = new AdView(this, AdSize.BANNER, "a14e574f8901e4c");
+		LinearLayout layout = (LinearLayout)findViewById(R.id.mainLinearLayout);      
+		layout.addView(adView);       
+		this.adView.loadAd(new AdRequest());
+		
+		this.setTitle("Lyra` MobileKnuddels [/w br1ght]");
 		/*String regId = C2DMessaging.getRegistrationId(this);
 
 		if (regId == null || regId.length() == 0) {
@@ -58,16 +69,21 @@ public class Login extends Activity {
 		int pos = 0;
 		try {
 			pos = Integer.parseInt(Util.readChatsystem(this).trim());
-		} catch(Throwable ex) {
-			ex.printStackTrace();
+		} catch(Throwable xx) {
+			xx.printStackTrace();
 		}
 		String readChan = Util.readChannel(this).trim();
 		//if(readChan == null || readChan.length() < 1)
-			readChan = "oGAME";
 		
 		txtUser.setText(Util.readUsername(this).trim());
 		txtPass.setText(Util.readPassword(this).trim());
 		txtChatsystem.setSelection(pos, true);
+		
+		if(txtChatsystem.getSelectedItemPosition() == 0)
+			readChan = "oGAME";
+		else
+			readChan = "Biergarten";
+		
 		txtChatsystem.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if(position == 0) {
@@ -248,6 +264,14 @@ public class Login extends Activity {
 		}
 		return hashtext;
 	}
+	
+	@Override
+	public void onDestroy() {
+		if(adView != null) {
+			adView.destroy();
+		}
+		super.onDestroy();
+	} 
 	/*
 	private boolean LikeMobileMfc = false;
 	private Facebook fb = new Facebook("184724601575513");
