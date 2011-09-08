@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MobileKnuddels</string>
+    <string name="service_label">iMfc Nachrichtendienst</string>
+    <string name="service_desc">Dieser Dienst regelt den Datenverkehr zwischen Handy und Server</string>
+    <string-array name="remoteendpoints">
+        <item>MFC</item>
+        <item>DE</item>
+        <item>AT</item>
+        <item>COM</item>
+        <item>CH</item>
+    </string-array>
+</resources>
