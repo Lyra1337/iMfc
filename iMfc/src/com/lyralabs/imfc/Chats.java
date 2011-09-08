@@ -1,5 +1,9 @@
 package com.lyralabs.imfc;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -15,9 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class Chats extends ListActivity {
+	private AdView adView;
+	
 	private String timestamp = "0";
 
 	private ProgressDialog progressDialog = null;
@@ -46,6 +53,12 @@ public class Chats extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.chats);
+		
+		LinearLayout outterLayout = (LinearLayout)this.findViewById(R.id.outterLayout);
+		
+		this.adView = new AdView(this, AdSize.BANNER, "a14e574f8901e4c");
+		outterLayout.addView(adView);       
+		this.adView.loadAd(new AdRequest());
 
 		this.setTitle("Lyra` MobileKnuddels [/w br1ght]");
 		
@@ -85,6 +98,14 @@ public class Chats extends ListActivity {
 			this.progressDialog = ProgressDialog.show(Chats.this, "Please wait...", "Retrieving data ...", true);
 		}
 		this.updateAdapter();
+	}
+	
+	@Override
+	public void onDestroy() {
+		if(adView != null) {
+			adView.destroy();
+		}
+		super.onDestroy();
 	}
 
 	private void updateAdapter() {
