@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView     xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content">
+<LinearLayout android:layout_width="fill_parent" 
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical"
+			  android:id="@+id/mainLinearLayout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                android:padding="10px">
+
+	<EditText android:id="@+id/txtUsername" 
+              android:layout_width="fill_parent" 
+              android:layout_height="40dip"
+              android:hint="Nickname" 
+              android:singleLine="true"
+              android:background="@android:drawable/editbox_background" />
+
+	<EditText android:id="@+id/txtPassword" 
+              android:layout_width="fill_parent" 
+              android:layout_height="40dip"
+              android:hint="Passwort"
+              android:singleLine="true"
+              android:password="true"
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/txtUsername" />
+
+    <EditText android:id="@+id/txtChannel"
+              android:layout_width="fill_parent"
+              android:layout_height="40dip"
+              android:hint="Channel"
+              android:singleLine="true"
+              android:text="oGAME"
+              android:enabled="false"
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/txtPassword" />
+
+    <LinearLayout android:id="@+id/layoutChatsytem"
+	              android:layout_width="fill_parent"
+	              android:layout_height="40dip"
+                  android:layout_below="@id/txtChannel">
+                  
+		<TextView android:layout_width="wrap_content"
+		          android:layout_height="40dip"
+		          android:textSize="19dip"
+		          android:text="Chatsystem:"/>
+	    <Spinner android:id="@+id/txtChatsytem"
+				 android:layout_width="fill_parent"
+			     android:layout_height="40dip"
+			     android:layout_marginLeft="20dip"
+			     android:paddingLeft="15dip"
+				 android:singleLine="true"
+				 android:text="Chatsystem"
+				 android:entries="@array/remoteendpoints"
+				 android:background="@android:drawable/editbox_background"
+				 android:layout_below="@id/txtChannel" />
+			 
+    </LinearLayout>
+              
+    <RelativeLayout android:layout_alignParentRight="true"
+		            android:layout_width="wrap_content"
+                    android:layout_below="@id/layoutChatsytem"
+		            android:layout_height="wrap_content">
+  
+	    <Button android:id="@+id/btnLogin"
+	            android:layout_width="120dip"
+	            android:layout_height="40dip"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginLeft="10px"
+	            android:text="Login"
+	            android:hapticFeedbackEnabled="true"
+	            android:longClickable="true"
+	            android:layout_below="@id/layoutChatsytem" />
+	            
+	    <CheckBox android:id="@+id/cbSavePW" 
+	              android:layout_width="wrap_content"
+	              android:layout_height="40dip"
+	              android:layout_alignParentLeft="true"
+	              android:layout_marginLeft="10px"
+	              android:checked="true"
+	              android:text="Daten speichern"
+	              android:layout_below="@id/layoutChatsytem" />
+              
+    </RelativeLayout>
+</RelativeLayout>
+</LinearLayout>
+</ScrollView>
