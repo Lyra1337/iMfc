@@ -16,6 +16,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,6 +42,7 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Xml.Encoding;
 import android.widget.Toast;
 
 public class Util {
@@ -448,15 +450,7 @@ public class Util {
 			FileInputStream fis = context.openFileInput(file);
 			byte[] buffer = new byte[1024];
 			fis.read(buffer);
-			StringBuilder sb = new StringBuilder();
-
-			for (int i = 0; i < buffer.length; i++) {
-				if (buffer[i] != 0)
-					sb.append(new String(new byte[] { buffer[i] }));
-				else
-					break;
-			}
-			return sb.toString();
+			return EncodingUtils.getString(buffer, "utf-8");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -467,7 +461,7 @@ public class Util {
 		FileOutputStream fos;
 		try {
 			fos = context.openFileOutput(file, Context.MODE_PRIVATE);
-			fos.write(text.getBytes());
+			fos.write(text.getBytes("utf-8"));
 			fos.close();
 		} catch (Throwable e) {
 			e.printStackTrace();
