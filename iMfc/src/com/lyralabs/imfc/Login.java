@@ -25,8 +25,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -69,35 +67,14 @@ public class Login extends Activity {
 		int pos = 0;
 		try {
 			pos = Integer.parseInt(Util.readChatsystem(this).trim());
-		} catch(Throwable xx) {
-			xx.printStackTrace();
+		} catch(Throwable ex) {
+			ex.printStackTrace();
 		}
-		String readChan = Util.readChannel(this).trim();
-		//if(readChan == null || readChan.length() < 1)
-		
 		txtUser.setText(Util.readUsername(this).trim());
 		txtPass.setText(Util.readPassword(this).trim());
+		txtChan.setText(Util.readChannel(this).trim());
 		txtChatsystem.setSelection(pos, true);
 		
-		if(txtChatsystem.getSelectedItemPosition() == 0)
-			readChan = "oGAME";
-		else
-			readChan = "Biergarten";
-		
-		txtChatsystem.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if(position == 0) {
-					txtChan.setText("oGAME");
-				} else {
-					txtChan.setText("Biergarten");
-				}
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-				
-			}
-		});
-		txtChan.setText(readChan);
         final Button btn = (Button) this.findViewById(R.id.btnLogin);
         
         btn.setLongClickable(true);
@@ -140,21 +117,6 @@ public class Login extends Activity {
 			this.finish();
 			return;
 		}
-		
-		/*CheckMobileMfcLike(new Runnable() {
-			public void run() {
-				Login.this.runOnUiThread(new Runnable() {
-					public void run() {
-						if(LikeMobileMfc) {
-							btn.setClickable(true);
-							btn.setVisibility(View.VISIBLE);
-						} else {
-							Toast.makeText(Login.this, "Du musst die \"Mobile Mfc\" Liken um dich einloggen zu können!", Toast.LENGTH_LONG).show();
-						}
-					}
-				});
-			}
-		});*/
 	}
 	
 	private String base64(String s) {
@@ -204,15 +166,6 @@ public class Login extends Activity {
 								i.putExtra("MFC.AUTHID", auth);
 	
 								Util.IsLoggedIn = true;
-								
-								/*if(Util.ServiceIntent == null) {
-									Util.ServiceIntent = new Intent(Login.this, RefreshService.class);
-									Login.this.startService(Util.ServiceIntent);
-								}*/
-								
-								//Login.this.startService(new Intent(Login.this, RefreshService.class));
-								
-								//Util.bindService(Login.this);
 								
 								Util.setAuthId(auth);
 								
@@ -271,77 +224,5 @@ public class Login extends Activity {
 			adView.destroy();
 		}
 		super.onDestroy();
-	} 
-	/*
-	private boolean LikeMobileMfc = false;
-	private Facebook fb = new Facebook("184724601575513");
-	
-	public void CheckMobileMfcLike(final Runnable doOnFinish) {
-		LikeMobileMfc = false;
-		
-		Log.e("FB Session", "isSessionValid() == " + fb.isSessionValid());
-		
-		try {
-			Log.i("json", fb.request("/me/likes"));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		fb.authorize(this, new String[] { "user_likes" },
-				new Facebook.DialogListener() {
-					public void onFacebookError(FacebookError e) {
-						Log.e("FacebookLike", "FB-Error: " + e.getMessage());
-					}
-
-					public void onError(DialogError e) {
-						Log.e("FacebookLike", "Error: " + e.getMessage());
-					}
-
-					public void onCancel() {
-						Log.e("FacebookLike", "Canceled");
-					}
-
-					public void onComplete(Bundle values) {
-						Log.e("FacebookLike", "Completed");
-						LikeMobileMfc = false;
-						try {
-							Bundle b = new Bundle();
-							b.putString("category", "Software");
-							String asd = fb.request("me/likes", b);
-
-							JSONObject obj;
-							try {
-								obj = new JSONObject(asd);
-								JSONArray arr = obj.getJSONArray("data");
-								for (int i = 0; i < arr.length(); i++) {
-									JSONObject o = arr.getJSONObject(i);
-									if (o.get("id").equals("149521565104483")) {
-										Log.e("FacebookLike", "Like!");
-										LikeMobileMfc = true;
-										Login.this.runOnUiThread(doOnFinish);
-										return;
-									}
-								}
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						Log.e("FacebookLike", "no Like :x");
-					}
-				});
 	}
-	
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        fb.authorizeCallback(requestCode, resultCode, data);
-    }
-    */
 }

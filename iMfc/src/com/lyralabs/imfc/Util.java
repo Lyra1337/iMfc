@@ -42,7 +42,6 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
-import android.util.Xml.Encoding;
 import android.widget.Toast;
 
 public class Util {

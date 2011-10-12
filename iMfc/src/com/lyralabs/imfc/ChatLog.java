@@ -1,5 +1,9 @@
 package com.lyralabs.imfc;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,6 +27,7 @@ public class ChatLog extends Activity {
 	private MessageType type = null;
 	private Integer lastCount = 0;
 	private EditText sendText = null;
+	private AdView adView = null;
 	
 	private Thread update = new Thread(new Runnable() {
 		public void run() {
@@ -88,6 +94,11 @@ public class ChatLog extends Activity {
 				return false;
 			}
 		});
+        
+        LinearLayout chatlogLayout = (LinearLayout) this.findViewById(R.id.chatlogLayout);
+        this.adView = new AdView(this, AdSize.BANNER, "a14e574f8901e4c");
+        chatlogLayout.addView(adView);
+		this.adView.loadAd(new AdRequest());
         
 		update.start();
     }

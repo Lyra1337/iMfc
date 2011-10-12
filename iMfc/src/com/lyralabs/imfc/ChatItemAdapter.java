@@ -50,6 +50,7 @@ public class ChatItemAdapter extends ArrayAdapter<ChatItem> {
 			Log.i("ChatItemAdapter", "current ChatItem is null");
 		}
 		
+		v.setClickable(true);
 		v.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(ChatItemAdapter.this._context, ChatLog.class);
