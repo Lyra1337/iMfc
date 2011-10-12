@@ -33,7 +33,6 @@
               android:hint="Channel"
               android:singleLine="true"
               android:text="oGAME"
-              android:enabled="false"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/txtPassword" />
 
@@ -66,7 +65,7 @@
   
 	    <Button android:id="@+id/btnLogin"
 	            android:layout_width="120dip"
-	            android:layout_height="40dip"
+	            android:layout_height="50dip"
 	            android:layout_alignParentRight="true"
 	            android:layout_marginLeft="10px"
 	            android:text="Login"

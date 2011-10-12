@@ -5,6 +5,7 @@
 				android:layout_height="fill_parent">
 	<LinearLayout android:layout_width="fill_parent"
 	  			  android:layout_height="fill_parent"
+	  			  android:id="@+id/chatlogLayout"
 				  android:shadowRadius="0"
 	              android:layout_weight="1">
 	<ListView android:id="@+id/history"
