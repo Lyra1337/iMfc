@@ -82,8 +82,14 @@ public class Util {
 	}
 	
 	public static String GetDeviceID(Context context) {
-	    final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-	    final WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+		TelephonyManager tm = null;
+		WifiManager wm = null;
+		try {
+			tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		} catch(Throwable t) { }
+		try {
+			wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+		} catch(Throwable t) { }
 	    
 	    String deviceMac, tmDevice, tmSerial, androidId;
 	    try {
