@@ -58,7 +58,8 @@ public class Util {
 	
 //	public final static String host = "http://mfc-dev.net:1337";
 //	public final static String host = "http://lyralabs.is-a-geek.net:1337";
-	public static String host = "http://imfc.mfc-dev.net:1337";
+//	public static String host = "http://imfc.mfc-dev.net:1337";
+  public static String host = "http://imfc.mfc-dev.net:80";
 	
 	public static Thread updateThread = null;
 	public static boolean Notifications = false;
