@@ -24,7 +24,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -59,6 +58,12 @@ public class Login extends Activity {
 
 		//Util.getHash(this);
 		
+		(new Thread(new Runnable() {
+      public void run() {
+        Login.this.checkInternet();
+      }
+    })).start();
+		
 		final TextView txtUser = (TextView)this.findViewById(R.id.txtUsername);
 		final TextView txtPass = (TextView)this.findViewById(R.id.txtPassword);
 		final TextView txtChan = (TextView)this.findViewById(R.id.txtChannel);
@@ -75,20 +80,18 @@ public class Login extends Activity {
 		txtChan.setText(Util.readChannel(this).trim());
 		txtChatsystem.setSelection(pos, true);
 		
-        final Button btn = (Button) this.findViewById(R.id.btnLogin);
-        
-        btn.setLongClickable(true);
-        btn.setHapticFeedbackEnabled(true);
-        btn.setOnLongClickListener(new OnLongClickListener() {	
+    final Button btn = (Button) this.findViewById(R.id.btnLogin);
+    
+    btn.setLongClickable(true);
+    btn.setHapticFeedbackEnabled(true);
+    
+    /*btn.setOnLongClickListener(new OnLongClickListener() {
 			public boolean onLongClick(View v) {
 				Util.host = "http://lyralabs.is-a-geek.net:1337";
 				return false;
 			}
-		});
-        
-        //btn.setClickable(false);
-        //btn.setVisibility(View.INVISIBLE);
-        
+		});*/
+    
 		btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				String u = txtUser.getText().toString().trim();
@@ -119,7 +122,37 @@ public class Login extends Activity {
 		}
 	}
 	
-	private String base64(String s) {
+	private void checkInternet() {
+	  Log.i("inetChecker", "checking...");
+	  try {
+  	  String url = Util.getHost() + "/ajax/?check=capacity";
+  	  final String response = Util.httpGet(url, false);
+  	  Log.i("inetChecker", "got response: " + response);
+  	  this.runOnUiThread(new Runnable() {
+        public void run() {
+      	  if(response == null) {
+      	    Toast.makeText(Login.this, "Warnung: Der Server ist derzeit nicht erreichbar!\r\nHast du eine Internetverbindung? {null}", Toast.LENGTH_LONG).show();
+          } else if(response.equals("not enough parameters") || response.equals("not full")) {
+            Toast.makeText(Login.this, "Yay! Server ist erreichbar!", Toast.LENGTH_LONG).show();
+          } else if(response.equals("full")) {
+            Toast.makeText(Login.this, "Sorry! Server ist derzeit überfüllt!", Toast.LENGTH_LONG).show();
+      	  } else {
+      	    Toast.makeText(Login.this, "Warnung: Es konnte nicht mit dem Server kommuniziert werden!\r\n"+response, Toast.LENGTH_LONG).show();
+      	  }
+        }
+      });
+	  } catch(final Exception ex) {
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          Toast.makeText(Login.this, "Error: Es konnte nicht mit dem Server kommuniziert werden!\r\n"+ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+      });
+	    ex.printStackTrace();
+	    Log.i("inetChecker", "got error: " + ex.getMessage());
+	  }
+  }
+
+  private String base64(String s) {
 		return Base64.encodeToString(s.getBytes(), Base64.DEFAULT).replace("=", "%3D").replace("\n", "");
 	}
 	
