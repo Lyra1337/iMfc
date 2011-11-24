@@ -58,12 +58,6 @@ public class Login extends Activity {
 
 		//Util.getHash(this);
 		
-		(new Thread(new Runnable() {
-      public void run() {
-        Login.this.checkInternet();
-      }
-    })).start();
-		
 		final TextView txtUser = (TextView)this.findViewById(R.id.txtUsername);
 		final TextView txtPass = (TextView)this.findViewById(R.id.txtPassword);
 		final TextView txtChan = (TextView)this.findViewById(R.id.txtChannel);
@@ -119,6 +113,12 @@ public class Login extends Activity {
 			this.startActivity(i);
 			this.finish();
 			return;
+		} else {
+	    (new Thread(new Runnable() {
+	      public void run() {
+	        Login.this.checkInternet();
+	      }
+	    })).start();
 		}
 	}
 	
