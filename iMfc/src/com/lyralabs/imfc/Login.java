@@ -162,33 +162,33 @@ public class Login extends Activity {
 		(new Thread(new Runnable() {
 			public void run() {
 				try {
-					String url = Util.host + "/login/" + 
+					String url = Util.host + "/login/" +
 								 "?nick=" + base64(user) +
 								 "&pass=" + base64(pass) +
 								 "&chan=" + base64(chan) +
 								 "&client=" + base64("Lyra` iMFC for Android") +
 								 "&apikey=" + "0CCAFA73-180C-4E92-1337-F7FE0117E6DF" +
-								 "&chatsystem=" + chatSystem + 
+								 "&chatsystem=" + chatSystem +
 								 "&hwid=" + Util.GetDeviceID(Login.this);
 					
 					Log.e("Loginurl", url);
 					
 					URL updateURL = new URL(url);
-			        URLConnection conn = updateURL.openConnection();
-			        InputStream is = conn.getInputStream();
-			        BufferedInputStream bis = new BufferedInputStream(is, 1024 * 8);
-			        ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			        
-			        int current = 0;
-			        while((current = bis.read()) != -1){
-			            baf.append((byte)current);
-			        }
+	        URLConnection conn = updateURL.openConnection();
+	        InputStream is = conn.getInputStream();
+	        BufferedInputStream bis = new BufferedInputStream(is, 1024 * 8);
+	        ByteArrayBuffer baf = new ByteArrayBuffer(50);
+	        
+	        int current = 0;
+	        while((current = bis.read()) != -1){
+	            baf.append((byte)current);
+	        }
 
-			        final String auth = new String(baf.toByteArray());
-			        
-			        if(auth != null && auth.length() > 30 && auth.length() < 40) {
+	        final String auth = new String(baf.toByteArray());
+	        
+	        if(auth != null && auth.length() > 30 && auth.length() < 40) {
 
-			        	Login.this.runOnUiThread(new Runnable() {
+	        	Login.this.runOnUiThread(new Runnable() {
 							public void run() {
 								Toast.makeText(Login.this, "Eingeloggt.", Toast.LENGTH_LONG).show();
 								
@@ -208,28 +208,28 @@ public class Login extends Activity {
 								Login.this.finish();
 							}
 						});
-			        } else {
-			        	Login.this.runOnUiThread(new Runnable() {
+	        } else {
+	        	Login.this.runOnUiThread(new Runnable() {
 							public void run() {
 								dialog.dismiss();
-					        	AlertDialog.Builder ab = new AlertDialog.Builder(Login.this);
-					        	ab.setTitle("Fehler");
-					        	ab.setMessage(auth);
-					        	ab.create().show();
+			        	AlertDialog.Builder ab = new AlertDialog.Builder(Login.this);
+			        	ab.setTitle("Fehler");
+			        	ab.setMessage(auth);
+			        	ab.create().show();
 							}
 						});
-			        }
-		        } catch(final Exception ex) {
-		        	Login.this.runOnUiThread(new Runnable() {
+	        }
+        } catch(final Exception ex) {
+        	Login.this.runOnUiThread(new Runnable() {
 						public void run() {
 							dialog.dismiss();
-				        	AlertDialog.Builder ab = new AlertDialog.Builder(Login.this);
-				        	ab.setTitle("Error");
-				        	ab.setMessage(ex.getMessage());
-				        	ab.create().show();
+				      AlertDialog.Builder ab = new AlertDialog.Builder(Login.this);
+				      ab.setTitle("Error");
+				      ab.setMessage(ex.getMessage());
+				      ab.create().show();
 						}
 					});
-		        }
+		    }
 			}
 		})).start();
 	}
