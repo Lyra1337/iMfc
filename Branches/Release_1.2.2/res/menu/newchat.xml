@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_newchat"    android:icon="@android:drawable/ic_menu_add"                android:title="Neuer Chat" />
-    <!--<item android:id="@+id/menu_pms"        android:icon="@android:drawable/ic_menu_send"               android:title="Private Nachrichten" />-->
-	<!--<item android:id="@+id/menu_togglebot"  android:icon="@android:drawable/ic_menu_agenda"             android:title="Bot ein/ausschalten" />-->
-    <item android:id="@+id/menu_cCommand"   android:icon="@android:drawable/ic_menu_more"               android:title="Command ausführen" />
-    <item android:id="@+id/menu_friendList" android:icon="@android:drawable/ic_menu_myplaces"           android:title="Friendlist" />
-    <item android:id="@+id/menu_logout"     android:icon="@android:drawable/ic_menu_close_clear_cancel" android:title="Ausloggen" />
-</menu>
