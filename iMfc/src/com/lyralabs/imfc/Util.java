@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.apache.http.HttpEntity;
@@ -56,6 +57,8 @@ public class Util {
 	public static String pass;
 	public static String chan;
 	
+	private static HashMap<String, String> moreActions = new HashMap<String, String>();
+	
 //	public final static String host = "http://mfc-dev.net:1337";
 //	public final static String host = "http://lyralabs.is-a-geek.net:1337";
 //	public static String host = "http://imfc.mfc-dev.net:1337";
@@ -67,6 +70,18 @@ public class Util {
 	private static Integer updateFailCount = 0;
 	private static ServiceConnection mConnection = null;
 	public static RefreshService mBoundService = null;
+	
+	public static HashMap<String, String> getMoreActions() {
+	  return Util.moreActions;
+	}
+	
+	public static void addMoreAction(String caption, String url) {
+	  Util.moreActions.put(caption, url);
+	}
+	
+	public static boolean hasMoreActions() {
+	  return (Util.moreActions.size() > 0);
+	}
 
 	public static void killAll(Context context) {
 		if (updateThread != null && updateThread.isAlive()) {
